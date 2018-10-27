@@ -30,11 +30,11 @@ public class TechnicalUtil {
                 List<BeanOHLC> subList = b.subList(b.size() - numberOfValuesNeeded - period, b.size() - numberOfValuesNeeded + numberofSMACalculated);
                 double sum = 0;
                 for (BeanOHLC bar : subList) {
-                    switch (tickType) {
-                        case com.ib.client.TickType.CLOSE:
+                    switch (TickType.get(tickType)) {
+                        case CLOSE:
                             sum = sum + bar.getClose();
                             break;
-                        case com.ib.client.TickType.VOLUME:
+                        case VOLUME:
                             sum = sum + bar.getVolume();
                             break;
                         default:
@@ -79,11 +79,11 @@ public class TechnicalUtil {
             List<BeanOHLC> subList = b.subList(period - 1, b.size() - 1);
             double multiplier = (double) 2 / (period + 1);
             for (BeanOHLC bar : subList) {
-                switch (tickType) {
-                    case com.ib.client.TickType.CLOSE:
+                switch (TickType.get(tickType)) {
+                    case CLOSE:
                         ema = (bar.getClose() - ema) * multiplier + ema;
                         break;
-                    case com.ib.client.TickType.VOLUME:
+                    case VOLUME:
                         ema = (bar.getVolume() - ema) * multiplier + ema;
                         break;
                     default:
@@ -120,11 +120,11 @@ public class TechnicalUtil {
             int i = b.indexOf(bar);
             double advdec = 0D;
             if (i > 0) {
-                switch (tickType) {
-                    case com.ib.client.TickType.CLOSE:
+                switch (TickType.get(tickType)) {
+                    case CLOSE:
                         advdec = b.get(i).getClose() - b.get(i - 1).getClose();
                         break;
-                    case com.ib.client.TickType.VOLUME:
+                    case VOLUME:
                         advdec = b.get(i).getVolume() - b.get(i - 1).getVolume();
                         break;
                     default:
@@ -180,28 +180,28 @@ public class TechnicalUtil {
     static public ArrayList<Double> getStandardDeviationOfReturns(ArrayList<BeanOHLC> prices, int duration, int tickType) {//prices should be from oldest to newest
         ArrayList<Double> out = new ArrayList();
         ArrayList<Double> inputValues = new ArrayList<>();
-        switch (tickType) {
-            case TickType.OPEN:
+        switch (TickType.get(tickType)) {
+            case OPEN:
                 for (BeanOHLC p : prices) {
                     inputValues.add(p.getOpen());
                 }
                 break;
-            case TickType.HIGH:
+            case HIGH:
                 for (BeanOHLC p : prices) {
                     inputValues.add(p.getHigh());
                 }
                 break;
-            case TickType.LOW:
+            case LOW:
                 for (BeanOHLC p : prices) {
                     inputValues.add(p.getLow());
                 }
                 break;
-            case TickType.CLOSE:
+            case CLOSE:
                 for (BeanOHLC p : prices) {
                     inputValues.add(p.getClose());
                 }
                 break;
-            case TickType.VOLUME:
+            case VOLUME:
                 for (BeanOHLC p : prices) {
                     inputValues.add(Long.valueOf(p.getVolume()).doubleValue());
                 }
@@ -243,28 +243,28 @@ public class TechnicalUtil {
     static public ArrayList<Double> getDailyReturns(ArrayList<BeanOHLC> prices, int tickType) {
         ArrayList<Double> out = new ArrayList<>();
         ArrayList<Double> inputValues = new ArrayList<>();
-        switch (tickType) {
-            case TickType.OPEN:
+        switch (TickType.get(tickType)) {
+            case OPEN:
                 for (BeanOHLC p : prices) {
                     inputValues.add(p.getOpen());
                 }
                 break;
-            case TickType.HIGH:
+            case HIGH:
                 for (BeanOHLC p : prices) {
                     inputValues.add(p.getHigh());
                 }
                 break;
-            case TickType.LOW:
+            case LOW:
                 for (BeanOHLC p : prices) {
                     inputValues.add(p.getLow());
                 }
                 break;
-            case TickType.CLOSE:
+            case CLOSE:
                 for (BeanOHLC p : prices) {
                     inputValues.add(p.getClose());
                 }
                 break;
-            case TickType.VOLUME:
+            case VOLUME:
                 for (BeanOHLC p : prices) {
                     inputValues.add(Long.valueOf(p.getVolume()).doubleValue());
                 }

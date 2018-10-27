@@ -73,8 +73,6 @@ public interface Connection {
 
     public boolean isConnected();
 
-    public BeanCassandraConnection getCassandraDetails();
-
     public void addOrderStatusListener(OrderStatusListener l);
 
     public void removeOrderStatusListener(OrderStatusListener l);

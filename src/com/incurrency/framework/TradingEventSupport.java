@@ -126,7 +126,7 @@ public class TradingEventSupport {
         }
     }
 
-    public void fireTradeEvent(int id, int ticktype) {
+    public void fireTradeEvent(int id, com.ib.client.TickType ticktype) {
 
         TradeEvent trade = new TradeEvent(new Object(), id, ticktype);
         Iterator itrListeners = tradeListeners.iterator();

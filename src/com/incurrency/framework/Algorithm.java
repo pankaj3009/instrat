@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import org.jquantlib.time.JDate;
+import org.jquantlib.time.*;
 import org.jquantlib.time.calendars.India;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -111,7 +111,7 @@ public class Algorithm {
                 try {
                     holidays = Files.readAllLines(Paths.get(holidayFile), StandardCharsets.UTF_8);
                     for (String h : holidays) {
-                        ind.addHoliday(new JDate(DateUtil.getFormattedDate(h, "yyyyMMdd", timeZone)));
+                        ind.addHoliday(new org.jquantlib.time.Date(DateUtil.getFormattedDate(h, "yyyyMMdd", timeZone)));
                     }
                 } catch (Exception e) {
                     logger.log(Level.SEVERE, "No Holiday File Found");

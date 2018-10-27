@@ -13,7 +13,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +23,6 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jquantlib.time.BusinessDayConvention;
-import org.jquantlib.time.JDate;
 import static com.incurrency.framework.Utilities.*;
 
 /**
@@ -190,9 +188,9 @@ public class Validator {
                 double entryBrokerage = Trade.getEntryBrokerage(s.getOms().getDb(), key);
 
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                JDate today = new JDate(getAlgoDate());
+                org.jquantlib.time.Date today = new org.jquantlib.time.Date(getAlgoDate());
                 String todayString = sdf.format(today.isoDate());
-                JDate yesterday = today.sub(1);
+                org.jquantlib.time.Date yesterday = today.sub(1);
                 yesterday = Algorithm.ind.adjust(yesterday, BusinessDayConvention.Preceding);
                 String yesterdayString = sdf.format(yesterday.isoDate());
                 String parentDisplayName = Trade.getParentSymbol(s.getOms().getDb(), key,tickSize);
@@ -221,9 +219,9 @@ public class Validator {
                 double entryPrice = Trade.getEntryPrice(s.getOms().getDb(), key);
                 double entryBrokerage = Trade.getEntryBrokerage(s.getOms().getDb(), key);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                JDate today = new JDate(getAlgoDate());
+                org.jquantlib.time.Date today = new org.jquantlib.time.Date(getAlgoDate());
                 String todayString = sdf.format(today.isoDate());
-                JDate yesterday = today.sub(1);
+                org.jquantlib.time.Date yesterday = today.sub(1);
                 yesterday = Algorithm.ind.adjust(yesterday, BusinessDayConvention.Preceding);
                 String yesterdayString = sdf.format(yesterday.isoDate());
                 String parentDisplayName = Trade.getParentSymbol(s.getOms().getDb(), key,tickSize);

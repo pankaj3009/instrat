@@ -5,6 +5,7 @@
 package com.incurrency.framework;
 
 import com.ib.client.Contract;
+import com.ib.client.Types;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -103,19 +104,19 @@ public class MarketData implements Runnable {
                 int col = 0;
                 try {
                     Contract contract = new Contract();
-                    contract.m_strike = s.get(row).getOption() == null ? 0 : Double.parseDouble(s.get(row).getOption());
-                    contract.m_right = s.get(row).getRight();
-                    contract.m_expiry = s.get(row).getExpiry();
-                    contract.m_symbol = s.get(row).getBrokerSymbol();
-                    contract.m_exchange = s.get(row).getExchange();
+                    contract.strike(s.get(row).getOption() == null ? 0 : Double.parseDouble(s.get(row).getOption())) ;
+                    contract.right(s.get(row).getRight());
+                    contract.lastTradeDateOrContractMonth(s.get(row).getExpiry());
+                    contract.symbol(s.get(row).getBrokerSymbol());
+                    contract.exchange(s.get(row).getExchange());
                     if (s.get(row).getExchangeSymbol() != null && s.get(row).getType().equals("STK")) {
-                        contract.m_localSymbol = s.get(row).getExchangeSymbol();
+                        contract.localSymbol(s.get(row).getExchangeSymbol());
                     }
-                    contract.m_primaryExch = s.get(row).getPrimaryexchange();
-                    contract.m_secType = s.get(row).getType();
-                    contract.m_currency = s.get(row).getCurrency();
+                    contract.primaryExch(s.get(row).getPrimaryexchange());
+                    contract.secType(s.get(row).getType());
+                    contract.currency(s.get(row).getCurrency());
                     int i = 0;
-                    while (isSnap && mIB.getWrapper().getOutstandingSnapshots() >= 80 - this.rtrequets && i < 20 && !contract.m_secType.equals("COMBO")) {
+                    while (isSnap && mIB.getWrapper().getOutstandingSnapshots() >= 80 - this.rtrequets && i < 20 && !contract.secType().equals(Types.SecType.BAG)) {
                         Thread.sleep(100);
                         i = i + 1;
                         if (i >= 20) { //trim snapshots after 2 seconds. 
@@ -123,7 +124,7 @@ public class MarketData implements Runnable {
                             i = 0;
                         }
                     }
-                    if (!contract.m_secType.equals("COMBO")) {
+                    if (!contract.secType().equals(Types.SecType.BAG)) {
                         mIB.getWrapper().getMktData(s.get(row), isSnap);
                     }
 

@@ -13,9 +13,9 @@ import java.util.EventObject;
 public class TradeEvent extends EventObject {
 
     private int _symbolID;
-    private int _tickType;
+    private com.ib.client.TickType _tickType;
 
-    public TradeEvent(Object source, int id, int type) {
+    public TradeEvent(Object source, int id, com.ib.client.TickType type) {
         super(source);
         _symbolID = id;
         _tickType = type;
@@ -38,14 +38,14 @@ public class TradeEvent extends EventObject {
     /**
      * @return the _tickType
      */
-    public int getTickType() {
+    public com.ib.client.TickType getTickType() {
         return _tickType;
     }
 
     /**
      * @param tickType the _tickType to set
      */
-    public void setTickType(int tickType) {
+    public void setTickType(com.ib.client.TickType tickType) {
         this._tickType = tickType;
     }
 

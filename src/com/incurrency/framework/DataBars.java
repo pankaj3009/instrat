@@ -312,14 +312,14 @@ public class DataBars {
         }
     }
 
-    public void setOHLCFromTick(long openTime, int type, String value) {
+    public void setOHLCFromTick(long openTime, com.ib.client.TickType type, String value) {
         if (mSymbol.getBarsstarttime() != null) {
             //Date tempDate = new Date(openTime);
             //Calendar tempCalendar = Calendar.getInstance();
             //tempCalendar.setTime(tempDate);
             synchronized (ohlc_lock) {
                 switch (type) {
-                    case com.ib.client.TickType.LAST:
+                    case LAST:
                         double price = Double.valueOf(value);
                         if (ohlc.getOpen() == 0D) {
                             ohlc.setOpen(price);
@@ -335,7 +335,7 @@ public class DataBars {
                             }
                         }
                         break;
-                    case com.ib.client.TickType.VOLUME:
+                    case VOLUME:
                         long volume = Long.valueOf(value);
                         long earlierVolume = this.getOhlc().getVolume();
                         this.getOhlc().setVolume(volume + earlierVolume);

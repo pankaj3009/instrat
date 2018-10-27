@@ -52,7 +52,6 @@ import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.volatilities.BlackConstantVol;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
-import org.jquantlib.time.JDate;
 import org.jquantlib.time.calendars.India;
 
 /**
@@ -332,7 +331,7 @@ public class BeanSymbol implements Serializable, ReaderWriterInterface<BeanSymbo
         }
 
         Date date = DateUtil.getFormattedDate(expiry, "yyyyMMdd", MainAlgorithm.timeZone);
-        EuropeanExercise exercise = new EuropeanExercise(new org.jquantlib.time.JDate(date));
+        EuropeanExercise exercise = new EuropeanExercise(new org.jquantlib.time.Date(date));
         PlainVanillaPayoff payoff = new PlainVanillaPayoff(Option.Type.Call, Utilities.getDouble(this.getOption(), 0));
         switch (right) {
             case "PUT":
@@ -2392,19 +2391,6 @@ public class BeanSymbol implements Serializable, ReaderWriterInterface<BeanSymbo
         this.dailyBar = dailyBar;
     }
 
-    /**
-     * @return the intraDayBarsFromTick
-     */
-    public DataBars getIntraDayBarsFromTick() {
-        return intraDayBarsFromTick;
-    }
-
-    /**
-     * @param intraDayBarsFromTick the intraDayBarsFromTick to set
-     */
-    public void setIntraDayBarsFromTick(DataBars intraDayBarsFromTick) {
-        this.intraDayBarsFromTick = intraDayBarsFromTick;
-    }
 
     /**
      * @return the exchangeSymbol as the identifier used by the exchange to
@@ -2562,8 +2548,8 @@ public class BeanSymbol implements Serializable, ReaderWriterInterface<BeanSymbo
         } else {
             try {
                 SimpleDateFormat sdf_yyyyMMdd = new SimpleDateFormat("yyyyMMdd");
-                JDate expiryDate = new JDate(sdf_yyyyMMdd.parse(this.getExpiry()));
-                bdte = Algorithm.ind.businessDaysBetween(new JDate(new Date()), expiryDate);
+                org.jquantlib.time.Date expiryDate = new org.jquantlib.time.Date(sdf_yyyyMMdd.parse(this.getExpiry()));
+                bdte = Algorithm.ind.businessDaysBetween(new org.jquantlib.time.Date(new Date()), expiryDate);
                 return bdte;
             } catch (Exception e) {
                 bdte = -1;
@@ -2612,8 +2598,8 @@ public class BeanSymbol implements Serializable, ReaderWriterInterface<BeanSymbo
         } else {
             try {
                 SimpleDateFormat sdf_yyyyMMdd = new SimpleDateFormat("yyyyMMdd");
-                JDate expiryDate = new JDate(sdf_yyyyMMdd.parse(this.getExpiry()));
-                cdte = expiryDate.sub(new JDate(new Date()));
+                org.jquantlib.time.Date expiryDate = new org.jquantlib.time.Date(sdf_yyyyMMdd.parse(this.getExpiry()));
+                cdte = expiryDate.sub(new org.jquantlib.time.Date(new Date()));
                 return cdte;
             } catch (Exception e) {
                 cdte = -1;

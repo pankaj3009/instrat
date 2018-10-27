@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.DateParser;
-import org.jquantlib.time.JDate;
+
 
 /**
  * Date utility
@@ -69,8 +69,8 @@ public class DateUtil {
      */
     public static String getNextBusinessDay(String date, String outputFormat) {
         SimpleDateFormat sdfOutput = new SimpleDateFormat(outputFormat);
-        JDate today = DateParser.parseISO(date);
-        JDate tomorrow = today.add(1);
+        org.jquantlib.time.Date today = DateParser.parseISO(date);
+        org.jquantlib.time.Date tomorrow = today.add(1);
         tomorrow = Algorithm.ind.adjust(tomorrow, BusinessDayConvention.Following);
         String tomorrowString = (sdfOutput.format(tomorrow.isoDate()));
         return tomorrowString;
@@ -87,8 +87,8 @@ public class DateUtil {
         String reference = date;
         for (int i = 0; i < ref; i++) {
             SimpleDateFormat sdfOutput = new SimpleDateFormat(outputFormat);
-            JDate today = DateParser.parseISO(reference);
-            JDate yesterday = today.sub(1);
+            org.jquantlib.time.Date today = DateParser.parseISO(reference);
+            org.jquantlib.time.Date yesterday = today.sub(1);
             yesterday = Algorithm.ind.adjust(yesterday, BusinessDayConvention.Preceding);
             String yesterdayString = (sdfOutput.format(yesterday.isoDate()));
             reference = yesterdayString;

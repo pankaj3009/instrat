@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.incurrency.framework.Order.EnumOrderType;
 import com.incurrency.framework.Order.OrderTypeRel;
 import com.ib.client.Order;
+import com.ib.client.OrderType;
 import static com.incurrency.framework.Algorithm.*;
 import static com.incurrency.framework.EnumPrimaryApplication.DISTRIBUTE;
 import static com.incurrency.framework.EnumPrimaryApplication.FLAT;
@@ -32,7 +33,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Timer;
 import org.jquantlib.time.BusinessDayConvention;
-import org.jquantlib.time.JDate;
 
 /**
  *
@@ -328,9 +328,9 @@ public class ExecutionManager implements Runnable, OrderListener, OrderStatusLis
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         int tempPosition;
         double tempPositionPrice;
-        JDate today = new JDate(Utilities.getAlgoDate());
+        org.jquantlib.time.Date today = new org.jquantlib.time.Date(Utilities.getAlgoDate());
         String todayString = sdf.format(today.isoDate());
-        JDate yesterday = today.sub(1);
+        org.jquantlib.time.Date yesterday = today.sub(1);
         yesterday = Algorithm.ind.adjust(yesterday, BusinessDayConvention.Preceding);
         String yesterdayString = sdf.format(yesterday.isoDate());
         String childdisplayName = Trade.getEntrySymbol(db, key,tickSize);
@@ -929,30 +929,30 @@ public class ExecutionManager implements Runnable, OrderListener, OrderStatusLis
 //                            event.setLimitPrice(event.getLimitPrice() + 10);
 //                        }
 //                    }
-                    ord.m_auxPrice = event.getTriggerPrice() > 0 ? event.getTriggerPrice() : 0;
-                    ord.m_lmtPrice = event.getLimitPrice() > 0 ? event.getLimitPrice() : 0;
-                    if (ord.m_lmtPrice > 0) {
+                    ord.auxPrice(event.getTriggerPrice() > 0 ? event.getTriggerPrice() : 0);
+                    ord.lmtPrice(event.getLimitPrice() > 0 ? event.getLimitPrice() : 0);
+                    if (ord.lmtPrice() > 0) {
                         if (event.getLimitPrice() > 0 & event.getTriggerPrice() == 0) {
-                            ord.m_orderType = "LMT";
-                            ord.m_lmtPrice = event.getLimitPrice();
+                            ord.orderType(OrderType.LMT);
+                            ord.lmtPrice(event.getLimitPrice());
                         } else if (event.getLimitPrice() == 0 && event.getTriggerPrice() > 0 && (event.getOrderSide() == EnumOrderSide.SELL || event.getOrderSide() == EnumOrderSide.COVER)) {
-                            ord.m_orderType = "STP";
-                            ord.m_lmtPrice = event.getLimitPrice();
-                            ord.m_auxPrice = event.getTriggerPrice();
+                            ord.orderType(OrderType.STP); 
+                            ord.lmtPrice(event.getLimitPrice());
+                            ord.auxPrice(event.getTriggerPrice());
                         } else if (event.getLimitPrice() > 0 && event.getTriggerPrice() > 0) {
-                            ord.m_orderType = "STP LMT";
-                            ord.m_lmtPrice = event.getLimitPrice();
-                            ord.m_auxPrice = event.getTriggerPrice();
+                            ord.orderType(OrderType.STP_LMT);
+                            ord.lmtPrice(event.getLimitPrice());
+                            ord.auxPrice(event.getTriggerPrice());
                         } else {
-                            ord.m_orderType = "MKT";
-                            ord.m_lmtPrice = 0;
-                            ord.m_auxPrice = 0;
+                            ord.orderType(OrderType.MKT);
+                            ord.lmtPrice(0);
+                            ord.auxPrice(0);
                         }
                         //ord.m_totalQuantity = size;
                         amendedOrders.put(id, ord);
                         if (amendedOrders.size() > 0) {
                             logger.log(Level.INFO, "200,AmendmentOrder,{0}:{1}:{2}:{3}:{4},NewLimitPrice={5}",
-                                    new Object[]{getOrderReference(), c.getAccountName(), Parameters.symbol.get(id).getDisplayname(), String.valueOf(event.getParentInternalOrderID()), String.valueOf(ord.m_orderId), String.valueOf(ord.m_lmtPrice)});
+                                    new Object[]{getOrderReference(), c.getAccountName(), Parameters.symbol.get(id).getDisplayname(), String.valueOf(event.getParentInternalOrderID()), String.valueOf(ord.orderId()), String.valueOf(ord.lmtPrice())});
                             event.setOrderTime();
                             c.getWrapper().placeOrder(c, amendedOrders, this, event);
                         }
@@ -1552,12 +1552,12 @@ public class ExecutionManager implements Runnable, OrderListener, OrderStatusLis
     public void getOpenOrders() {
         com.ib.client.ExecutionFilter filter = new com.ib.client.ExecutionFilter();
         for (BeanConnection c : Parameters.connection) {
-            filter.m_clientId = c.getClientID();
+            filter.clientId(c.getClientID());
             if ("".compareTo(c.getLastExecutionRequestTime()) != 0) {
-                filter.m_time = c.getLastExecutionRequestTime();
+                filter.time(c.getLastExecutionRequestTime());
             } else {
                 String time = DateUtil.getFormatedDate("yyyyMMdd HH:mm:ss", new Date().getTime() - 7 * 24 * 60 * 60 * 1000, TimeZone.getTimeZone(Algorithm.timeZone));
-                filter.m_time = time;
+                filter.time(time);
             }
             c.setLastExecutionRequestTime(DateUtil.getFormatedDate("yyyyMMdd HH:mm:ss", new Date().getTime(), TimeZone.getTimeZone(Algorithm.timeZone)));
             c.getWrapper().requestOpenOrders();

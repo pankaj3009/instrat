@@ -25,12 +25,12 @@ public class OrderStatusEvent extends EventObject {
     private String _whyHeld;
     private BeanConnection _c;
 
-    OrderStatusEvent(Object obj, BeanConnection c, int orderId, String status, int filled, int remaining, double avgFillPrice, int permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
+    OrderStatusEvent(Object obj, BeanConnection c, int orderId, String status, double filled, double remaining, double avgFillPrice, int permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
         super(obj);
         this._orderID = orderId;
         this._status = status;
-        this._filled = filled;
-        this._remaining = remaining;
+        this._filled = (int)Math.round(filled);
+        this._remaining = (int)Math.round(remaining);
         this._avgFillPrice = avgFillPrice;
         this._permId = permId;
         this._parentId = parentId;

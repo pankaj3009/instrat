@@ -36,7 +36,6 @@ import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.volatilities.BlackConstantVol;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.time.BusinessDayConvention;
-import org.jquantlib.time.JDate;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.India;
 import com.google.common.base.Preconditions;
@@ -1691,12 +1690,12 @@ public class Utilities {
     }
 
     public static double getImpliedVol(BeanSymbol s, double underlying, double price, Date evaluationDate) {
-        new Settings().setEvaluationDate(new org.jquantlib.time.JDate(evaluationDate));
+        new Settings().setEvaluationDate(new org.jquantlib.time.Date(evaluationDate));
         String strike = s.getOption();
         String right = s.getRight();
         String expiry = s.getExpiry();
         Date expirationDate = DateUtil.getFormattedDate(expiry, "yyyyMMdd", Algorithm.timeZone);
-        EuropeanExercise exercise = new EuropeanExercise(new org.jquantlib.time.JDate(expirationDate));
+        EuropeanExercise exercise = new EuropeanExercise(new org.jquantlib.time.Date(expirationDate));
         PlainVanillaPayoff payoff;
         if (right.equals("PUT")) {
             payoff = new PlainVanillaPayoff(Option.Type.Put, Utilities.getDouble(strike, 0));
@@ -1717,7 +1716,7 @@ public class Utilities {
             logger.log(Level.SEVERE, "Could not calculte vol for Symbol:{0}. OptionPrice:{1},Underlying:{2}", new Object[]{
                 s.getDisplayname(), price, underlying});
         }
-        new Settings().setEvaluationDate(new org.jquantlib.time.JDate(new Date()));
+        new Settings().setEvaluationDate(new org.jquantlib.time.Date(new Date()));
         return vol;
 
     }
@@ -1776,11 +1775,11 @@ public class Utilities {
             SimpleDateFormat sdf_yyyyMMdd = new SimpleDateFormat("yyyyMMdd");
             String currentDay = sdf_yyyyMMdd.format(startDate);
             Date today = sdf_yyyyMMdd.parse(currentDay);
-            JDate jToday = new JDate(today);
+            org.jquantlib.time.Date jToday = new org.jquantlib.time.Date(today);
             Calendar expiry = Calendar.getInstance();
             expiry.setTime(sdf_yyyyMMdd.parse(expiryDate));
-            JDate jExpiry = new JDate(expiry.getTime());
-            JDate jAdjExpiry = Algorithm.ind.advance(jExpiry, -daysBeforeExpiry, TimeUnit.Days);
+            org.jquantlib.time.Date jExpiry = new org.jquantlib.time.Date(expiry.getTime());
+            org.jquantlib.time.Date jAdjExpiry = Algorithm.ind.advance(jExpiry, -daysBeforeExpiry, TimeUnit.Days);
             //expiry.set(Calendar.DATE, expiry.get(Calendar.DATE) - daysBeforeExpiry);
             if (jAdjExpiry.le(jToday)) {
                 rollover = true;
@@ -3491,14 +3490,14 @@ public class Utilities {
 
     public static String getLastThursday(String dateString, String format, int lookForward) {
         //datestring is in yyyyMMdd
-        JDate date = formatStringToJdate(dateString, format);
+        org.jquantlib.time.Date date = formatStringToJdate(dateString, format);
         Calendar cal = Calendar.getInstance();
         cal.setTime(date.longDate());
         cal.add(Calendar.MONTH, lookForward);
-        JDate lastWorkDay = JDate.endOfMonth(new JDate(cal.getTime()));
+        org.jquantlib.time.Date lastWorkDay = org.jquantlib.time.Date.endOfMonth(new org.jquantlib.time.Date(cal.getTime()));
         cal.setTime(lastWorkDay.longDate());
         int adjust = cal.get(Calendar.DAY_OF_WEEK) - 5;
-        JDate lastThursday;
+        org.jquantlib.time.Date lastThursday;
         if (adjust > 0) {
             lastThursday = lastWorkDay.sub(adjust);
         } else if (adjust == 0) {
@@ -3515,9 +3514,9 @@ public class Utilities {
 
     }
 
-    public static JDate formatStringToJdate(String dateString, String format) {
+    public static org.jquantlib.time.Date formatStringToJdate(String dateString, String format) {
         Date input = DateUtil.getFormattedDate(dateString, format, Algorithm.timeZone);
-        return new JDate(input);
+        return new org.jquantlib.time.Date(input);
     }
 
     public static <K, V> boolean equalMaps(Map<K, V> m1, Map<K, V> m2) {
@@ -4059,28 +4058,28 @@ public class Utilities {
 
     static double[] BeanOHLCToArray(ArrayList<BeanOHLC> prices, int tickType) {
         ArrayList<Double> inputValues = new ArrayList<>();
-        switch (tickType) {
-            case TickType.OPEN:
+        switch (TickType.get(tickType)) {
+            case OPEN:
                 for (BeanOHLC p : prices) {
                     inputValues.add(p.getOpen());
                 }
                 break;
-            case TickType.HIGH:
+            case HIGH:
                 for (BeanOHLC p : prices) {
                     inputValues.add(p.getHigh());
                 }
                 break;
-            case TickType.LOW:
+            case LOW:
                 for (BeanOHLC p : prices) {
                     inputValues.add(p.getLow());
                 }
                 break;
-            case TickType.CLOSE:
+            case CLOSE:
                 for (BeanOHLC p : prices) {
                     inputValues.add(p.getClose());
                 }
                 break;
-            case TickType.VOLUME:
+            case VOLUME:
                 for (BeanOHLC p : prices) {
                     inputValues.add(Long.valueOf(p.getVolume()).doubleValue());
                 }

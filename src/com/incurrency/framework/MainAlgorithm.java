@@ -72,7 +72,6 @@ public class MainAlgorithm extends Algorithm {
     private String realTimeBars;
     private boolean tradingAlgoInitialized = false;
     private boolean duplicateAccounts = false;
-    private String version = "1.10B-20180622";
     private final String delimiter = "_";
     TimerTask closeAlgorithms = new TimerTask() {
         @Override
@@ -257,11 +256,10 @@ public class MainAlgorithm extends Algorithm {
         String today = DateUtil.getFormatedDate("yyyyMMdd", Utilities.getAlgoDate().getTime(), TimeZone.getTimeZone(Algorithm.timeZone));
         if (useForTrading) {
             if (!holidays.contains(today)) {
-                JQuantLib.setLogger(logger);
                 int connectionCount = connectToBroker();
                 if (connectionCount > 0) {
-                    getContractInformation();
                     subscribeMarketData();
+                    getContractInformation();
                     Timer keepAlive = new Timer("Timer: Maintain IB Connection");
                     keepAlive.schedule(keepConnectionAlive, new Date(), 60 * 1000);
                 }
@@ -303,7 +301,6 @@ public class MainAlgorithm extends Algorithm {
                 concatInput = concatInput + " " + temp;
             }
         }
-        logger.log(Level.INFO, "100,Startup,,inStratVersion={0}", new Object[]{version});
         logger.log(Level.INFO, "100,Startup,,inStratInputParameters={0}", new Object[]{concatInput});
     }
 
