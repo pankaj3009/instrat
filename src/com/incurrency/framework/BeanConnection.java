@@ -28,6 +28,34 @@ import javax.swing.JOptionPane;
 public class BeanConnection implements Serializable, ReaderWriterInterface {
 
     /**
+     * @return the topic
+     */
+    public String getTopic() {
+        return topic;
+    }
+
+    /**
+     * @param topic the topic to set
+     */
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    /**
+     * @return the realtime
+     */
+    public boolean isRealtime() {
+        return realtime;
+    }
+
+    /**
+     * @param realtime the realtime to set
+     */
+    public void setRealtime(boolean realtime) {
+        this.realtime = realtime;
+    }
+
+    /**
      * @return the lastExecutionRequestTime
      */
     public String getLastExecutionRequestTime() {
@@ -73,6 +101,8 @@ public class BeanConnection implements Serializable, ReaderWriterInterface {
     private int ordersHaltTrading = 10;
     private String ownerEmail;
     private String lastExecutionRequestTime = "";
+    private boolean realtime =false;
+    private String topic="INR";
     final Object lockPNLStrategy = new Object();
     final Object lockActiveOrders = new Object();
     final Object lockOrderMapping = new Object();

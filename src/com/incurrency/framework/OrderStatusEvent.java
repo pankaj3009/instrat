@@ -25,7 +25,7 @@ public class OrderStatusEvent extends EventObject {
     private String _whyHeld;
     private BeanConnection _c;
 
-    OrderStatusEvent(Object obj, BeanConnection c, int orderId, String status, double filled, double remaining, double avgFillPrice, int permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
+    public OrderStatusEvent(Object obj, BeanConnection c, int orderId, String status, double filled, double remaining, double avgFillPrice, int permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
         super(obj);
         this._orderID = orderId;
         this._status = status;
